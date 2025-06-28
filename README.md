@@ -1,61 +1,41 @@
-import Jetson.GPIO as GPIO
-import time
-from serial import Serial
+# 🚦 Railway Speed Monitoring and Braking Prototype
 
-# Set GPIO pins for motor control
-ENA = 33
-IN1 = 35
-IN2 = 37
-ENB = 32
-IN3 = 40
-IN4 = 38
+🎓 Proyek Tugas Akhir – Teknik Fisika, Telkom University  
+📅 Periode: Oktober 2023 – Juli 2024
 
-# Set GPIO mode
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup([ENA, IN1, IN2, ENB, IN3, IN4], GPIO.OUT)
+## 🎯 Tujuan Proyek
+Merancang sistem monitoring kecepatan dan pengereman otomatis berbasis sensor untuk meningkatkan keselamatan pada sistem transportasi rel. Prototipe ini mengimplementasikan pemantauan kecepatan dan posisi secara real-time, serta mampu melakukan pengereman otomatis jika kecepatan melebihi batas yang diizinkan.
 
-# Set direction of motors to forward
-GPIO.output(IN1, GPIO.HIGH)
-GPIO.output(IN2, GPIO.LOW)
-GPIO.output(IN3, GPIO.HIGH)
-GPIO.output(IN4, GPIO.LOW)
+## 🧪 Sistem yang Dibangun
+Proyek ini terdiri dari dua sistem terpisah:
+1. **Sistem Monitoring Kecepatan Tinggi** – Diuji pada kendaraan mobil (bukan kereta), menggunakan radar dan RFID untuk mencatat kecepatan dan lokasi.
+2. **Sistem Pengereman Otomatis** – Diuji pada mobil robotic skala kecil untuk simulasi pengereman otomatis berdasarkan kecepatan maksimum yang diizinkan.
 
-# Initialize Serial Port for RFID
-rfid_serial = Serial('/dev/ttyUSB0', 115200, timeout=0.1)
+## 🧩 Komponen & Teknologi
+- Jetson Nano (mikrokontroler)
+- Radar Sensor (pengukur kecepatan)
+- RFID Reader (penanda lokasi statis)
+- Motor DC + L298N + PCA9685 (penggerak aktuator)
+- Sensor IR/Encoder (pengukur RPM)
+- Flask Web Dashboard (tampilan HMI real-time)
+- Kalibrasi kecepatan & pengujian lapangan
 
-# Function to send RFID command and read response
-def send_rfid_cmd(cmd):
-    data = bytes.fromhex(cmd)
-    rfid_serial.write(data)
-    response = rfid_serial.read(512)
-    response_hex = response.hex().upper()
-    hex_list = [response_hex[i:i+2] for i in range(0, len(response_hex), 2)]
-    hex_space = ' '.join(hex_list)
-    return hex_space
+## 👩‍💻 Peran Saya
+- Pemrograman RFID Reader untuk pembacaan posisi
+- Kontrol motor DC berbasis pengaturan PWM
+- Penghitungan kecepatan menggunakan encoder
+- Kalibrasi kecepatan dan pengujian fungsi sistem
+- Integrasi antarmuka monitoring berbasis Flask
 
-# Initial speed before detecting any tag
-last_speed = 100
+## 📁 Struktur File 
+- `RFIDmotor.py` → Integrasi RFID dan penggerak motor
+- `RFIDCINA.py` → Uji coba awal RFID Reader
+- `RFIDfix.py` → Versi final RFID
+- `OK.py` → Pengujian sederhana RFID Reader
 
-try:
-    while True:
-        # Read RFID tag
-        tag_data = send_rfid_cmd('BB 00 22 00 00 22 7E')
-        # Convert RFID response to detected tag
-        if '6C DC B9 33' in tag_data:  # Tag 1
-            last_speed = 30
-        elif '88 DD 43 D1' in tag_data:  # Tag 2
-            last_speed = 10
-        elif 'E8 DC 42 5E' in tag_data:  # Tag 3
-            last_speed = 0
-        
-        # Set the motor speed
-        if last_speed > 0:
-            GPIO.output(ENA, GPIO.HIGH)
-            GPIO.output(ENB, GPIO.HIGH)
-        else:
-            GPIO.output(ENA, GPIO.LOW)
-            GPIO.output(ENB, GPIO.LOW)
+## 📌 Catatan
+Sistem ini bersifat **prototipe** dan belum diuji pada kereta sebenarnya. Pengujian dilakukan secara terbatas menggunakan kendaraan simulasi skala kecil.
 
-except KeyboardInterrupt:
-    # Clean up GPIO pins when the program stops
-    GPIO.cleanup()
+## 📫 Kontak
+- Email: anajemifikra3@gmail.com  
+- LinkedIn: [Ana Jemi Fikra](https://www.linkedin.com/in/anajemifikra03/)
