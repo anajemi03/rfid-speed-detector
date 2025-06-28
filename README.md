@@ -35,6 +35,7 @@ Proyek ini terdiri dari dua sistem terpisah:
 
 ## 📌 Catatan
 Sistem ini bersifat **prototipe** dan belum diuji pada kereta sebenarnya. Pengujian dilakukan secara terbatas menggunakan kendaraan simulasi skala kecil.
+⚠️ : Beberapa file pada folder `archive/` merupakan hasil eksperimen. Karena pengembangan dilakukan bertahap, tidak semua file memiliki status final. Namun seluruh file menggambarkan proses perancangan sistem yang telah dilakukan secara langsung.
 
 ## 📫 Kontak
 - Email: anajemifikra3@gmail.com  
